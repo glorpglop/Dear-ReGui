@@ -6468,102 +6468,87 @@ aa:DefineElement("ProgressBar", {
 	end,
 })
 aa:DefineElement("Combo", {
-	Base = { Value = "", Placeholder = "", Callback = f, Items = {}, Disabled = false, WidthFitPreview = false, Label = "Combo" },
-	Create = function(p, q)
-		local r, s, t, u, v, x, y =
-			q.Placeholder,
-			q.NoAnimation,
-			q.Selected,
-			q.Label,
-			q.Disabled,
-			q.WidthFitPreview,
-			aa:InsertPrefab("Combo", q)
-		local z, A, B = aa:MergeMetatables(q, y), y.Combo
-		local C, D, E =
-			p:Label({ Text = tostring(r), Parent = A, Name = "ValueText" }),
-			p:ArrowButton({ Parent = A, Interactable = false, Size = UDim2.fromOffset(19, 19), LayoutOrder = 2 }),
-			p:Label({ Text = u, Parent = y, LayoutOrder = 2 })
-		if x then
-			aa:SetProperties(y, { AutomaticSize = Enum.AutomaticSize.XY, Size = UDim2.new(0, 0, 0, 0) })
-			aa:SetProperties(A, { AutomaticSize = Enum.AutomaticSize.XY, Size = UDim2.fromScale(0, 1) })
-		end
-		local F, G =
-			function(F, ...)
-				q:SetOpen(false)
-				return q.Callback(z, F, ...)
-			end, function(F, G)
-				local H = p:GetThemeKey("AnimationTweenInfo")
-				y.Interactable = not F
-				ae:HeaderCollapseToggle({ Tweeninfo = H, NoAnimation = G, Collapsed = not F, Toggle = D.Icon })
-			end
-		local function H()
-			local I, J = q.GetItems, q.Items
-			if I then
-				return I()
-			end
-			return J
-		end
-		function q:SetValueText(I)
-			C.Text = tostring(I)
-		end
-		function q:ClosePopup()
-			if not B then
-				return
-			end
-			B:ClosePopup(true)
-		end
-		function q:SetDisabled(I)
-			self.Disabled = I
-			y.Interactable = not I
-			p:SetColorTags({ [E] = I and "LabelDisabled" or "Label" }, true)
-			return self
-		end
-		function q:SetValue(I)
-			local J = H()
-			local K = J[I]
-			local L = K or I
-			self.Selected = I
-			self.Value = L
-			self:ClosePopup()
-			if typeof(I) == "number" then
-				self:SetValueText(L)
-			else
-				self:SetValueText(I)
-			end
-			F(I, L)
-			return self
-		end
-		function q:SetOpen(I)
-			local J = self.Selected
-			self.Open = I
-			G(I, s)
-			if not I then
-				self:ClosePopup()
-				return
-			end
-			B = p:Dropdown({
-				RelativeTo = A,
-				Items = H(),
-				Selected = J,
-				OnSelected = function(...)
-					q:SetValue(...)
-				end,
-				OnClosed = function()
-					self:SetOpen(false)
-				end,
-			})
-			return self
-		end
-        function q:RefreshItems() --labubu
-            local selected = self.Selected
-            if B then
-                B:ClosePopup(true)
-                B:Destroy()
+    Base = { Value = "", Placeholder = "", Callback = f, Items = {}, Disabled = false, WidthFitPreview = false, Label = "Combo" },
+    Create = function(p, q)
+        local r, s, t, u, v, x, y =
+            q.Placeholder,
+            q.NoAnimation,
+            q.Selected,
+            q.Label,
+            q.Disabled,
+            q.WidthFitPreview,
+            aa:InsertPrefab("Combo", q)
+        local z, A, B = aa:MergeMetatables(q, y), y.Combo
+        local C, D, E =
+            p:Label({ Text = tostring(r), Parent = A, Name = "ValueText" }),
+            p:ArrowButton({ Parent = A, Interactable = false, Size = UDim2.fromOffset(19, 19), LayoutOrder = 2 }),
+            p:Label({ Text = u, Parent = y, LayoutOrder = 2 })
+        if x then
+            aa:SetProperties(y, { AutomaticSize = Enum.AutomaticSize.XY, Size = UDim2.new(0, 0, 0, 0) })
+            aa:SetProperties(A, { AutomaticSize = Enum.AutomaticSize.XY, Size = UDim2.fromScale(0, 1) })
+        end
+        local F, G =
+            function(F, ...)
+                q:SetOpen(false)
+                return q.Callback(z, F, ...)
+            end, function(F, G)
+                local H = p:GetThemeKey("AnimationTweenInfo")
+                y.Interactable = not F
+                ae:HeaderCollapseToggle({ Tweeninfo = H, NoAnimation = G, Collapsed = not F, Toggle = D.Icon })
+            end
+        local function H()
+            local I, J = q.GetItems, q.Items
+            if I then
+                return I()
+            end
+            return J
+        end
+        function q:SetValueText(I)
+            C.Text = tostring(I)
+        end
+        function q:ClosePopup()
+            if not B then
+                return
+            end
+            B:ClosePopup(true)
+        end
+        function q:SetDisabled(I)
+            self.Disabled = I
+            y.Interactable = not I
+            p:SetColorTags({ [E] = I and "LabelDisabled" or "Label" }, true)
+            return self
+        end
+        function q:SetValue(I)
+            local J = H()
+            local K = J[I]
+            local L = K or I
+            self.Selected = I
+            self.Value = L
+            self:ClosePopup()
+            if typeof(I) == "number" then
+                self:SetValueText(L)
+            else
+                self:SetValueText(I)
+            end
+            F(I, L)
+            return self
+        end
+        function q:SetOpen(I)
+            local J = self.Selected
+            self.Open = I
+            G(I, s)
+            if not I then
+                self:ClosePopup()
+                if B then
+                    B:Destroy()
+                    B = nil
+                end
+                return
             end
             B = p:Dropdown({
                 RelativeTo = A,
                 Items = H(),
-                Selected = selected,
+                Selected = J,
                 OnSelected = function(...)
                     q:SetValue(...)
                 end,
@@ -6571,21 +6556,42 @@ aa:DefineElement("Combo", {
                     self:SetOpen(false)
                 end,
             })
+            return self
         end
-		local I = function()
-			local I = q.Open
-			q:SetOpen(not I)
-		end
-		A.Activated:Connect(I)
-		G(false, true)
-		q:SetDisabled(v)
-		if t then
-			q:SetValue(t)
-		end
-		aa:SetAnimation(A, "Inputs")
-		p:TagElements({ [A] = "Frame" })
-		return z, y
-	end,
+        
+        function q:RefreshItems()
+            if self.Open and B then
+                local selected = self.Selected
+                B:ClosePopup(true)
+                B:Destroy() 
+                B = p:Dropdown({
+                    RelativeTo = A,
+                    Items = H(),
+                    Selected = selected,
+                    OnSelected = function(...)
+                        q:SetValue(...)
+                    end,
+                    OnClosed = function()
+                        self:SetOpen(false)
+                    end,
+                })
+            end
+        end
+
+        local I = function()
+            local I = q.Open
+            q:SetOpen(not I)
+        end
+        A.Activated:Connect(I)
+        G(false, true)
+        q:SetDisabled(v)
+        if t then
+            q:SetValue(t)
+        end
+        aa:SetAnimation(A, "Inputs")
+        p:TagElements({ [A] = "Frame" })
+        return z, y
+    end,
 })
 local p = {
 	TileBarConfig = {
